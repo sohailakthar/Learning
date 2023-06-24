@@ -42,5 +42,6 @@ printHobbyOfUser.apply(user1, ["singing", "dancing", "guitar"]);  // Hobby of ab
 // *************** BIND() ***************
 // Sometimes the bind() method has to be used to prevent losing this.
 // When a function is used as a callback, this is lost.
+// So, bind() binds 'this' to a particular object and returns the binded function
 const bindFunc = ageAfter10Years.bind(user1);
 bindFunc();     // Age of abc after 10 years will be: 26
