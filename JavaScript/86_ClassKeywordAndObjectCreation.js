@@ -46,7 +46,7 @@ const user2 = new CreateUser('xyz', 16, 'f', 'xyz@gmail.com', 'Bangalore');
 
 console.log(user1.isAdult());       // output: true
 user2.details();                    // output: xyz is 16 years old and lives in Bangalore
-
+console.log(Object.getPrototypeOf(user1));      // output: {constructor: ƒ, details: ƒ, isAdult: ƒ}
 
 
 // As we can see, creating objects is easier with class
