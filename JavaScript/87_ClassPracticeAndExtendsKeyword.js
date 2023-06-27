@@ -11,6 +11,9 @@ class Animal {
     }
 }
 
-const animal1 = new Animal("chub", 2);
-console.log(animal1);
-animal1.eating();
+class Dog extends Animal {
+    
+}
+const tommy = new Dog("chub", 2);
+console.log(tommy);
+tommy.eating();
