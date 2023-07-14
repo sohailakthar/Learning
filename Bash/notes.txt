@@ -1041,8 +1041,92 @@ $ ls
 8. Filename Expansion(Globbing)
 ````````````````````````````````
 There are 3 characters that perform Globbing:
-   *   => matches any string, including emptiness
+   *   => matches any string, including emptiness (most commonly used)
    ?   => matches any single character
    []  => matches a single character from within a range
 
 Unquotted globbing characters are considered patterns and replaced with a list of filenames matching the pattern.
+
+
+Aestrisk(*)
+""""""""""""
+$ touch f{a..b}{1..3}.txt f
+$ ls f*
+f  fa1.txt  fa2.txt  fa3.txt  fb1.txt  fb2.txt  fb3.txt
+
+(Note: we used ls f*  so, * matched emptiness too and we got 'f' in result as well)
+
+$ echo fa*.txt
+fa1.txt  fa2.txt  fa3.txt
+
+(Note: * works only because it is unquoted)
+
+$ echo "fa*.txt"
+fa*.txt
+
+$ ls "fa*.txt"
+ls: cannot access 'fa*.txt': No such file or directory
+
+
+Filenames starting with .(dot) ie hidden files are not matched by aestrisk(*)
+$ touch .abc
+$ ls *
+f  fa1.txt  fa2.txt  fa3.txt  fb1.txt  fb2.txt  fb3.txt		<- .abc wasn't displayed
+
+
+So, .a must be matched explicitly
+$ ls .a*	
+.abc
+
+
+Question Mark(?)
+""""""""""""""""
+It marks any single character
+
+$ ls fa?.txt
+fa1.txt  fa2.txt  fa3.txt
+
+If we had a file 'fa10.txt' it would've been ignored, because after 'fa' it has 2 characters.. but ? matches only single character
+For that, we could specify two question marks(But previous files would be ignored)
+
+$ ls fa??.txt
+fa10.txt
+
+
+Square brackets([])
+""""""""""""""""""""
+Used to match single character from within a range
+
+$ ls fa[123].txt
+fa1.txt  fa2.txt  fa3.txt
+
+$ ls f[ab]*.txt
+fa1.txt  fa2.txt  fa3.txt  fa10.txt  fb1.txt  fb2.txt  fb3.txt
+
+
+# We can use ranges in square brackets as follows:
+$ ls f[a-b][1-2].txt
+fa1.txt  fa2.txt  fb1.txt  fb2.txt
+
+
+[0-5a-dX-Z]  this is interpreted as  [012345abcdXYZ]
+
+
+Negating pattern expression:
+Using ! or ^
+
+$ ls f[a]*	<- f followed by a and then any character
+fa1.txt fa2.txt fa3.txt fa10.txt
+
+$ ls f[^a]*	<- f followed by (NOT a) and then any character ... ie f shouldn't be followed by an 'a'
+fb1.txt  fb2.txt  fb3.txt
+
+
+So far, we have been using only 'ls' command but these(expansions) can be used with any other commands too
+Let's remove all the fa1.txt fa2.txt etc
+$ rm f[ab][1-3].txt 
+
+(When using potentially dangerous commands like rm like this, it's always better to first echo which files will be affected)
+
+
+DONE TILL LESSON27
