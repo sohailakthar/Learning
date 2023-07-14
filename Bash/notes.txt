@@ -1,0 +1,1048 @@
+SCRIPTS CAN BE FOUND IN :   ~/Learning/Bash/scipts/
+
+Bash is a shell program to effeciently interact with operating system of a computer.
+Using GUI to interact is not the fastest way.
+Bash can be used to automate tasks in computer.
+
+
+LESSON: ALIASES
+***************
+Bash alias: A shortcut to frequently used possibly long commands.
+
+To see all alias: $ alias
+OUTPUT:-
+alias grep='grep --color=auto'
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -alF'
+alias ls='ls --color=auto'
+
+To execute the original 'ls' command, use '\'  LIKE:   $ \ls
+
+
+Creating an alias: $ alias <alias_name> = '<command_in_single_quotes>'
+ex:   $ alias c = 'clear'
+(Note: The single quotes are only necessary when the command contains spaces)
+(Note: The alias will only be available for the current session, i.e it'll be gone if you close the terminal)
+
+To make an alias which will work at all times(even after restarting PC), edit the bashrc file
+$ vim ~/.bashrc	   <- At the end of this file, append your alias command and save it (You can also use nano instead of vim)
+
+I've added the following alias at the end of .bashrc
+alias now='date +%F\ %T'	<= Display date&time
+
+Now, if I open a new terminal, or restart the PC, the alias 'now' will still work
+
+.bashrc is loaded when you start a terminal... So, if you created an alias after already starting the terminal, you can either restart the terminal or you can manually update the .bashrc with following command
+$ source .bashrc
+
+To remove an alias: $ unalias <alias_name>
+ex:  $ unalias now
+(Note: Alias will be removed only for the current session)
+
+Some useful aliases that you can make:
+$ ssh -p 2299 user_name@192.168.0.105	<- To connect to a server with SSH, instead of memorizing port and IP, use alias
+$ alias ports='netstat -tupan'		<- List ports
+$ alias root='sudo su -'		<- Alias for the command to become superuser
+$ alias update='sudo apt update && sudo apt dist-upgrade -y && sudo apt clean'    <- Update the system
+$ alias lt='ls -hSF --size -1'		<- List files in 1 column, sorted by size, in a human readable format
+
+
+
+LESSON: SHELL
+*************
+Shell: A shell(command interpreter) is an interface between the user and the kernel.
+Shell gets started when the user logs in and starts the terminal
+
+Commands to check which shell is on your device:   $ echo $0		(or)		$ echo $SHELL
+OUTPUT:
+/bin/bash
+
+Some other types of shells:
+BOURNE, BASH, Z SHELL, C SHELL, KORN SHELL...
+Bash is one of the most common shell on linux distributions
+
+Command to see all shells:   $ cat /etc/shells
+OUTPUT:
+# /etc/shells: valid login shells
+/bin/sh
+/bin/bash
+/usr/bin/bash
+/bin/rbash
+
+
+To change the default shell:   $ chsh -s <path_to_shell>
+ex:  $ chsh -s /bin/bash
+
+Different users can have different bash as default, and some have none(nologin)
+To check the bash of all users: $ cat /etc/passwd
+
+
+Shell Script: It is an executable text file that contains shell commands and other specific programming structures.
+It is a powerful system administration tool.. Can be used to automate repetitive tasks.
+
+Some common sysadmin tasks where shells/scripts can be used
+1. Monitoring the system
+2. Data backup and restoring
+3. Creating an alert system
+4. User administration
+5. Security auditing
+etc....
+
+
+LESSON: CREATING A SCRIPT
+**************************
+Let's create a script which will do the following tasks:
+Create a folder in current directory named 'dir1', create a new file inside that folder named 'file.txt' with the contents "Hello Bash World" inside it, display the directory tree of outermost folder, then display contents of file.txt
+
+$ vim first_script.sh		<- Creating a shell script
+
+=======SCRIPT=======
+mkdir -p dir1
+echo "Hello Bash World" > dir1/file.txt
+tree .
+cat dir1/file.txt
+=====END SCRIPT=====
+Save and exit vim: 	:wq
+
+Give executable permissions to the script:  $ chmod +x first_script.sh
+
+To execute: $ ./first_script.sh		<- Have to specify the directory of script
+
+=======OUTPUT======
+├── dir1
+│   └── file.txt
+├── first_script.sh
+└── helloworld.sh
+
+1 directory, 3 files
+Hello Bash World
+======END OUTPUT======
+
+
+To be able to execute the script from any directory, modify the $PATH variable.. to do so:
+Open the bashrc file from root directory:  $ vim ~/.bashrc
+At the end of file, add the command:	   export PATH="$PATH:~/scripts"
+
+
+
+LESSON: SHEBANG
+****************
+For executable scripts, the system expects 'shebang' in the first line...
+Shebang is a character sequence: #!
+This is followed by the path to interpreter...
+For a bash script, it is #!/bin/bash
+If shebang and path are not provided, the default interpreter is used... (bash in our first_script.sh case)
+
+To check the path to shell:  $ which $SHELL
+OUTPUT:  /bin/bash
+
+We can add the following line to the top of our script:
+#!/bin/bash
+
+
+Let's understand use of shebang with a python code...
+To find path to python3: which python3
+OUTPUT: /usr/bin/python3
+
+=======helloworld======== (Note: We didn't provide the .py extension)
+#!/usr/bin/python3
+print("Hello World")
+========END============
+
+Give executable permissions: $ chmod +x helloworld
+To execute:  ./helloworld
+
+OUTPUT:
+Hello World
+
+Therefore, using shebang we manually provide the interpreter to be used for that script.
+
+
+
+LESSON: COMMENTS
+*****************
+In Bash, comments are started with a '#' sign
+Bash ignores everything on a line after the '#' symbol.
+The only exception is Shebang i.e #!
+
+Comments helps a lot with code readability, maintainability..
+
+Bash doesn't provide any direct method for multi-line comments. However, we can use the following trick:
+: '		<-colon, space, inverted-comma  (This specifies the start of multi-line comment)
+<some random words>
+<this is commented out>
+'		<-inverted-comma (Specifies the end of multi-line comment)
+This trick isn't common, and usually multi-line comments are just a bunch of single-line comments
+
+
+============comments.sh================
+#!/bin/bash
+
+echo "This script demonstrates comments"
+
+#Im a single line comment. I wont be executed
+
+echo "The single-line comment was skipped"
+
+: '
+Im a multi-line comment
+Will I be executed? Find out for yourself
+date; ls
+'
+
+echo "End of program"
+============END comments.sh================
+
+Give executable permissions: $ chmod +x comments.sh
+Execute: $ ./comments.sh
+
+
+===========OUTPUT===============
+This script demonstrates comments
+The single-line comment was skipped
+End of program
+=========END OUTPUT=============
+
+
+
+LESSON: WAYS TO RUN SCRIPTS
+****************************
+1. Common:
+ $ chmod +x script_name.sh
+ $ ./script_name.sh
+(Note: If script is not in current dir, you must mention absolute path of the script)
+
+2. Mention the interpreter (In this method, setting execution permission isn't mandatory)
+ $ bash bash_script.sh
+ $ python3 python_script.py
+This will also over-write the script shebang interpreter directive
+
+3. Using source
+ $ source bash_script.sh
+
+
+
+LESSON: VARIABLES
+*****************
+A variable is a name for a memory location where a value is stored.
+eg: PORT="32"
+(Note: There should be no spaces before/after the '=' sign
+
+
+Bash is weakly-typed i.e you don't need to assign the type while creating a variable.
+No floats in Bash.
+
+On CLI terminal:
+$ fname="Sohail"
+$ lname="Akthar"
+$ fullname="$fname $lname"
+$ echo $fullname
+
+OUTPUT:
+Sohail Akthar
+
+
+Command to get a list of all the shell variables and functions:
+$ set
+
+To find our variable, we can pipe this command with 'grep' command
+$ set | grep "fullname"
+
+Command to undefine/remove the variable
+$ unset "fullname"
+
+
+To declare a constant variable ie variable whose value cannot be modified
+$ declare -r NAME="SOHAIL"
+
+$ echo $NAME
+OUTPUT:
+SOHAIL
+
+$ NAME="AKTHAR"
+OUTPUT:
+bash: NAME: readonly variable
+
+
+Variable Naming Conventions:
+1. Shell variables use capital letters (eg: $PATH, $USER, $HOME, $HISTFILE, $HISTSIZE)
+2. To distinguish with shell variables, use lower letters with underscores
+3. Variable names should be descriptive
+4. Cannot start with a number
+5. Cannot contain spaces or other special characters
+6. Can start with an underscore
+7. Constants should be all capital
+
+
+
+
+LESSON: VARIABLE ASSIGNING & EXPANSION
+**************************************
+Variable substitution/expansion:
+The '$' character introduces parameter expansion, command substitution, or arithmetic expansion.
+eg: echo $var_name
+'$var_name' is a simplification of:  ${var_name}
+Mentioning '{}' is mandatory if you're appending something to the variable
+
+On CLI Terminal:
+$ os="Windows"		<- Creating a variable 'os' with value=Windows
+$ echo $os		<- Print value of the variable 'os'
+Windows			<- OUTPUT
+$ echo ${os}		<- Print value of the variable 'os'
+Windows			<- OUTPUT
+$ echo $os11		<- Print value of the variable 'os' along with '11' appended to it
+			<- Empty OUTPUT (Because it tried to find the variable 'os11'
+$ echo ${os}11		<- Print value of the variable 'os' along with '11' appended to it
+Windows11		<- OUTPUT (Value of the variable 'os' along with '11' appended to it)
+
+
+
+LESSON: QUOTING
+****************
+Quoting is used to remove the special meaning of certain characters or words.
+To prevent reserved words from being recognized and prevent variable expansion.
+
+Bash quoting mechanisms:
+1. Single quotes =>  ''
+2. Double quotes =>  ""
+3. The escape character =>  \
+
+
+Single Quotes
+``````````````
+eg:
+$ echo 'will I print $NAME'
+OUTPUT:
+will I print $NAME	<- (Note: The variable 'NAME' was not dereferenced)
+
+NOTE:
+A single quote cannot occur between the single quotes.. even if we use '\'
+$ 'I'm Sohail'	<- Doesn't execute
+$ 'I\'m Sohail'	<- Doesn't execute
+
+
+
+Double Quotes
+`````````````
+Preserves the value of all the characters within the quotes with the exception of $, ``, \\
+
+On CLI Terminal:
+$ echo "will I print $NAME"
+OUTPUT:
+will I print SOHAIL	<- (Note: The variable 'NAME' was dereferenced, unlike when single-quotes were used)
+
+NOTE:
+We can use "(double-quotes) if we precede it with the escape character '\'
+$ "I"m Sohail"	<- Doesn't execute
+$ "I\"m Sohail"
+I"m Sohail	<- OUTPUT
+
+
+
+BACKSLASH
+``````````
+Gives the literal value of following character.
+
+On CLI Terminal:
+$ echo "My name is $NAME"
+My name is SOHAIL		<- OUTPUT ($NAME was dereferenced)
+$ echo "My name is \$NAME"
+My name is $NAME		<- OUTPUT ($NAME wasn't dereferenced, because it took literal value of '$')
+
+
+On CLI Terminal:
+$ echo me & you			   <- Trying to print 'me & you'
+[ERROR] Command 'you' not found    <- Because '&' has special meaning ie run process in background
+$ echo me \& you
+me & you			   <- Using '\' to get literal value of '&'
+
+$ echo 'me \& you'
+me \& you
+$ echo "me \& you"
+me \& you
+
+#To print '\' use '\\'
+$ echo C:\Windows
+C:Windows
+$ echo C:\\Windows
+C:\Windows
+
+
+
+LESSON: ENVIRONMENT AND SHELL LOCAL VARIABLES
+**********************************************
+Each time we launch a terminal, a collection of predefined variables are set.
+They are: Environment variables and Shell local variables
+
+1. Environment variables:
+inherited by any child shells or processes
+used to pass info to processes that are spawned from the current shell
+displayed using env or printenv
+
+2. Shell variables:
+are contained exclusively within the shell in which they were set
+displayed using set
+
+
+Environment variables can be useful to change default settings of PC. Env variables are also called exported variables.
+
+
+
+LESSON: TAKING/PROMPTING INPUTS
+*******************************
+The 'read' command is used to take input from the user (Until a newline ie pressed 'Enter' key)
+
+On CLI Terminal:
+$ read name
+Sohail		<- Input given
+$ echo $name
+Sohail		<- Output
+#Multiple inputs can be taken and stored in variables like this:
+$ read $age $city
+20		<- Input provided by user
+Hyderabad	<- Input provided by user
+$ echo $age
+20
+$ echo $city
+Hyderabad
+
+If the variable isn't specified, the value will be stored in a predefined variable called 'REPLY'
+
+$ read
+Hello
+$ echo $REPLY
+Hello
+
+To perform read along with some message for the user, use the '-p' 
+$ read -p "your_message" variable_name
+
+On CLI Terminal:
+$ read -p "Enter your name: " name
+Enter your name: Sohail
+$ echo $name
+Sohail
+
+#Wrote a script which will read IP Address as input and blocks all packets from that address
+#drop_packets_for_specific_ip.sh
+
+To read any sensitive information, you don't want it to display while you're typing. So, use '-s' in 'read' command
+$ read -s -p "Enter password: " mypass
+
+$ echo $mypass
+helloworld
+
+
+LESSON: POSITIONAL PARAMETERS
+******************************
+Consider the following command:
+$ apt install nginx
+Here, 'apt' is the script name, 'install' is its first argument and 'nginx' is its second argument
+The spaces between script name and parameters is called IFS(Internal Field Separator)
+
+Parameters referenced by a name are called variables.
+Parameters referenced by a number are called positional parameters
+Parameters referenced by a special symbol are auto-set parameters
+
+Positional Parameters:
+Consider the following command
+$ ./script.sh filename.txt directory1 10.0.0.1
+Here,
+$0 => the name of the script itself(script.h)
+$1 => the first positional parameter(filename1)
+$2 => the second positional parameter(directory1)
+$3 => the third parameter of the script(10.0.0.1)
+similarly, if we had more parameters, $4 would correspond to fourth argument and so on.
+For more than one-digit, number must be enclosed in '{}'... eg: ${10} for tenth argument
+
+Let's write a script.
+=============positional_arguments.sh==============
+#!/bin/bash
+echo "0. Script name (\$0) is $0"
+echo "1. The value of positional argument (\$1) is $1"
+echo "2. The value of positional argument (\$2) is $2"
+echo "3. The value of positional argument (\$3) is $3"
+echo "4. The value of positional argument (\$4) is $4"
+===============END SCRIPT===========================
+
+$ chmod +x positional_arguments.sh
+$ ./positional_arguments.sh
+=================OUTPUT========================
+0. Script name ($0) is ./positional_arguments.sh
+1. The value of positional argument ($1) is 
+2. The value of positional argument ($2) is 
+3. The value of positional argument ($3) is 
+4. The value of positional argument ($4) is 
+================================================
+
+(NOTE: Since we didn't pass any arguments when executing the script, no values are printed.
+
+$ ./positional_arguments.sh arg1 arg2 arg3 arg4
+=================OUTPUT========================
+0. Script name ($0) is ./positional_arguments.sh
+1. The value of positional argument ($1) is arg1
+2. The value of positional argument ($2) is arg2
+3. The value of positional argument ($3) is arg3
+4. The value of positional argument ($4) is arg4
+=================================================
+
+
+Setting default parameter in case user doesn't provide any argument.
+With the positional parameter, add ':-' followed by the default value... eg: ${1:-NULL}... NULL is the default 
+Let's modify the previous script
+
+===============positional_arguments.sh========================
+#!/bin/bash
+echo "0. Script name (\$0) is $0"
+echo "1. The value of positional argument (\$1) is ${1:-MISSING_ARG_1}"
+echo "2. The value of positional argument (\$2) is ${2:-MISSING_ARG_2}"
+echo "3. The value of positional argument (\$3) is ${3:-MISSING_ARG_3}"
+echo "4. The value of positional argument (\$4) is ${4:-MISSING_ARG_4}"
+========================END SCRIPT=================================
+
+$ ./positional_arguments
+=====================OUTPUT===========================
+0. Script name ($0) is ./positional_arguments.sh
+1. The value of positional argument ($1) is MISSING_ARG_1
+2. The value of positional argument ($2) is MISSING_ARG_2
+3. The value of positional argument ($3) is MISSING_ARG_3
+4. The value of positional argument ($4) is MISSING_ARG_4
+=======================================================
+
+
+
+Exercise: Create a script which takes filename as input, displays contents of the file and makes a compression
+=================display_and_compress.sh================
+#!/bin/bash
+echo "Display contents of $1 ..."
+sleep 2
+cat "$1"
+echo
+echo "Compressing $1 ..."
+sleep 2
+tar -cjvf "$1.tar.gz" $1
+
+echo "Done"
+======================END SCRIPT==========================
+
+$ chmod +x display_and_compress.sh
+$ ./display_and_compress.sh file.txt
+======================OUTPUT============================
+Display contents of file.txt ...
+987-123-4567
+123 456 7890
+(123) 456-7890
+
+Compressing file.txt ...
+file.txt
+Done
+==========================================================
+
+
+Exercise: Create a script that will drop all packets coming from a specific ip/domain
+=================exercise2.sh=======================
+#!/bin/bash
+read -p "Enter IP, Network or Domain to drop: " ip
+echo "Blocking connections from $ip"
+sleep 1
+iptables -I INPUT -s $ip -j DROP
+echo "Done"
+====================END SCRIPT=======================
+
+
+$ chmod +x exercise2.sh
+$ sudo ./exercise2.sh		<- sudo because the command 'iptables' requires it
+=====================OUTPUT==========================
+Enter IP, Network or Domain to drop: 1.1.1.1
+Blocking connections from 1.1.1.1
+Done
+=====================================================
+
+You can check it by 'ping 1.1.1.1' in other terminal
+
+
+A little variation to this script, instead of reading input from user, pass ip as an argument(This is better for automation)
+==================exercise2_1.sh======================
+#!/bin/bash
+echo "Blocking connections from $1"
+sleep 1
+iptables -I INPUT -s $1 -j DROP
+echo "Done"
+===================END SCRIPT=========================
+
+$ chmod +x exercise2_1.sh
+$ sudo ./exercise2_1.sh 8.8.4.4
+====================OUTPUT==========================
+Blocking connections from 8.8.4.4
+Done
+====================================================
+
+
+
+
+LESSON: SPECIAL PARAMETERS
+***************************
+Bash shell treats several parameters in some special way.
+These parameteres can only be referenced and assigning to them is not allowed.
+
+Some special parameters:
+$0 => name of the script itself
+$@ and $* => a string representation of all positional parameters
+$# => number of positional arguments(in decimal)
+$? => most recent foreground command exit status (Each command returns exit status... 0 is for success, 1 for error) 
+$$ => process ID of the shell
+
+
+===================special_parameters.sh=====================
+#!/bin/bash
+echo "\$0 is $0"
+echo "\$@ is $@"
+echo "\$* is $*"
+echo "\$# is $#"
+echo "\$? is $?"
+echo "\$$ is $$"
+==========================END SCRIPT===========================
+
+$ chmod +x special_parameters.sh
+$ ./special_parameters.sh a b c 1 2 3
+========================OUTPUT========================
+$0 is ./special_parameters.sh
+$@ is a b c 1 2 3
+$* is a b c 1 2 3
+$# is 6
+$? is 0
+$$ is 16473
+======================END OUTPUT======================
+
+
+Let's take a look at '$?'  (It gives the exit status of most recent foreground command)
+On CLI Terminal
+$ echo hello
+hello		<- Command executed succesfully
+
+$ echo $?
+0		<- Exit status 0 (Most recent foreground command was successfully executed)
+
+$ cat x
+cat: x: No such file or directory	<- Error
+
+$ echo $?
+1		<- Exit status 1 (Previous command didn't execute well)
+
+$ lps
+Command 'lps' not found
+
+$ echo $?
+127		<- Exit status 127 (for command not found error)
+
+
+
+Difference between '$@' and '$*'
+`````````````````````````````````
+Both '$@' and '$*' expand to a string representation of all positional parameters($1 $2 $3 ...) but differ when they are wrapped inside double quotes.
+
+$@   => word splitting is performed and $@="$1 $2 $3"
+"$@" => word splitting is not performed and "$@"="$1" "$2" "$3"
+
+$*   => is the same as unquoted $@
+"$*" => will place the first character of the IFS variable between parameters
+
+
+=============dollar_at.sh===============
+#!/bin/bash
+touch $@   # touch "$1 $2 $3"		<- create files mentioned in parameters
+========================================
+
+$ chmod +x dollar_at.sh
+$ ./dollar_at.sh "my file.txt" "your report.txt"
+$ ls
+my	report.txt
+your	file.txt
+(Note: 4 differenet files were created, "my", "file.txt", "your", "report.txt")
+
+
+Let's update $@ to "$@"
+=============dollar_at.sh===============
+#!/bin/bash
+touch "$@"   # touch "$1" "$2" "$3"		<- create files mentioned in parameters
+========================================
+
+$ chmod +x dollar_at.sh
+$ ./dollar_at.sh "my file.txt" "your report.txt"
+$ ls
+"my file.txt"	"your report.txt"
+(Note: Only 2 files were created, ie word splitting was not performed)
+
+
+$* is the same as $@
+But, "$*" is different, let's make a script dollar_star.sh
+
+===================dollar_star.sh======================
+#!/bin/bash
+IFS=:
+touch "$*"
+=====================END SCRIPT========================
+
+$ chmod +x dollar_star.sh
+$ ./dollar_star.sh "my file.pdf" "your report.pdf"
+$ ls
+'my file.pdf:your report.pdf'
+
+(Note: "$*" treated positional parameters as one word, created a single file... The space between parameters was replaced by the IFS we set=':' (colon) in script
+
+
+
+LESSON: SHELL EXPANSIONS
+*************************
+Command Line Processing:
+1.Tokenization -> 2.Command Identification -> 3.Shell Expansions -> 4.Quote Removal -> 5.Redirections ->6. Execution
+
+Different kinds of expansions and order in which they are performed.
+1. Brace expansion
+2. Tilde expansion
+3. Parameter and variable expansion
+4. Command substitution
+5. Arithmetic expansion
+6. Process substitution
+7. Word splitting
+8. Filename expansion(Globbing)
+
+
+1. Brace Expansion:
+````````````````````
+It is a mechanism by which arbitrary strings may be generated.
+Types:  a) String lists
+	b) Range (sequence) lists
+
+
+a) String Lists:-
+""""""""""""""""""
+echo {old,new,current,backup}
+old new current backup 
+(Expression was expanded into list of strings)
+
+Syntax: optional_prefix{value1,value2,value3}optional_suffix
+Examples:
+{a..k}			<- a b c d e f g h i j k
+file{01..05}.txt	<- file01.txt file02.txt file03.txt file04.txt file05.txt
+Day{1..7}		<- Day1 Day2 Day3 Day4 Day5 Day6 Day7
+
+$ echo "Hello "{Sohail,Shoaib,Faizan}!
+Hello Sohail!  Hello Shoaib!  Hello Faizan!
+
+(NOTE: Should not add any spaces before/after the commas in braces)
+
+$ echo {hey, there}
+{hey, there}
+
+
+Brace expansions can be nested:-
+$ echo {old,new-{york,hafeezpet,testament},backup}
+old new-york new-testament new-hafeezpet backup
+
+
+
+b) Range(Sequence) Lists:-
+""""""""""""""""""""""""""
+Generates a sequence with given range(start, end)
+
+$ echo {1..10}
+1 2 3 4 5 6 7 8 9 10
+
+$ echo {j..m}
+j k l m
+
+# It can fix width for digits by placing leading zeros:
+$ echo {01..10}
+01 02 03 04 05 06 07 08 09 10
+
+# We can also specify jump/increment
+$ echo {1..15..2}
+1 3 5 7 9 11 13 15
+
+$ echo {a..z..2}
+a c e g i k m o q s u w y
+
+# The range can be reversed
+$ echo {10..2}
+10 9 8 7 6 5 4 3 2
+
+$ echo {z..a..3}
+z w t q n k h e b
+
+(Note: Both values(start,end) inside braces must be of same type...)
+$ echo {z..1}  <- This is invalid
+
+
+(Note: Brace expansion happens before variable expansion... Let's demonstrate)
+$ a=2
+$ echo {$a..10}
+{2..10}
+
+Here, expected output was: '2 3 4 5 6 7 8 9 10'
+But, braces were expanded first hence it didn't expand the value of a to 2.
+
+
+
+Exercise: Write command such that it does the following:
+ i. Create three directories namely Jan, Feb, March
+ ii. The three directories Jan,Feb,March must each have 31,28,31 directories inside of them respectively named 01,02,.....
+ iii. The internal directories of all Jan,Feb,March must have a log file inside namely log.daily
+
+Solution:
+$ sudo mkdir -p ./app/{Jan/{01..31},Feb/{01..28},March/{01..31}}
+$ sudo touch ./app/{Jan/{01..31},Feb/{01..28},March/{01..31}}/log.daily
+
+Files are in: Bash/scripts/exercise3/
+
+
+
+2. Tilde Expansion
+```````````````````
+It expands to home directories, current or previous working directory, directories from the directory stack.
+Examples:
+~     => $HOME of the current user
+~USER => User's home directory
+~+    => $PWD (Present Working Directory)
+~-    => $OLDPWD (Old PWD)
+
+
+$ echo ~
+/home/sohail
+
+$ echo ~+
+/home/sohail/Learning/Bash/scripts		<- This is where I executed the above command from ie PWD(present working directory)
+
+$ echo ~-
+/home/sohail/Learning/Bash/scripts/exercise3	<- This is where I was before moving to PWD
+
+
+$ echo root
+/root		  <- home directory of user 'root'
+
+$ echo sohail
+/home/sohail	  <- home directory of user 'sohail'
+
+
+
+3. Parameter Expansion
+```````````````````````
+'$' symbol introduces parameter expansion
+
+Syntax:
+$parameter
+${parameter}
+
+Examples:
+echo $USER
+echo ${HOME}
+
+
+$ os=Linux
+$ echo $os
+Linux
+
+# Use curly braces to append something to the variable
+$ echo $osMint
+			<- No output, because it searched for a variable named 'osMint'
+$ echo ${os}Mint
+LinuxMint		<- This works as expected
+
+
+There are some expansion operators which modify the case of letters in the expanded variables
+^^  <- Change to all caps
+,,  <- Change to all smalls
+
+$ echo ${os^^}
+LINUX
+
+$ echo ${os,,}
+linux
+
+
+Moving on to slightly advanced...
+If we mistype variable name, or specify a variable which doesn't exist, IT may break the script.
+ex: ping $ip		<- We didn't declare/assign any variable called ip
+ping: usage error: Destination address required
+
+In such cases we can make a check if a value for variable exists and eventually use the value or a default
+
+Along with the variable name add ':-' and then the default value
+$ ping ${ip:-1.1.1.1}		<- 1.1.1.1 is default if ip variable is not found
+PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.	<- OUTPUT
+
+If we try to echo the ip variable, we will not get any output.. Because we just substituted the default value and not actually assign it to the ip variable
+$ echo $ip
+		<- No output
+
+We can however, replace :- with := to get the desired result ie assign default value to the variable if it is not found
+$ ping ${ip:=1.1.1.1}
+PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.	<- OUTPUT
+
+$ echo $ip
+1.1.1.1		<- We got the output
+
+
+
+4. Command Substitution
+````````````````````````
+It means saving the output of a command in a variable
+
+Syntax: `command` or $(command)		<- In first syntax, it is back-tick sign and NOT the single quote
+
+Examples:
+p="$(ping 8.8.8.8)"
+users="`cut -d: -f1 /etc/passwd`"
+echo $users
+
+
+Let's assign the output of date command to a variable called dt
+$ dt="$(date)"
+$ echo $dt
+Friday 14 July 2023 04:11:24 PM IST
+
+
+Let's use another syntax. This time store output of whoami into variable called whothis
+$ whothis="`whoami`"	<- Note that the sign is `(backtick) and not single quote
+$ echo $whothis
+sohail			<- Output (result of the command - $ whoami)
+
+
+Exercise: Use command substitution ie store date in yyyy-mm-dd format in a variable. Use this variable to create a compressed file .tar.gz and name it with the value of variable
+Ex: 2023-07-14.tar.gz
+
+$ now="`date +%F`"			<- %F is a formatter to get date in yyyy-mm-dd format
+$ tar -cvjf "${now}.tar.gz" file.txt	<- command to make a compressed file
+$ ls
+2023-07-14.tar.gz  file.txt		<- Successfully compressed file.txt with the name '2023-07-14.tar.gz'
+
+Or simply,
+$ tar -cvjf "$(date +%F).tar.gz" file.txt	<- Instead of storing in variable and then passing it, we're directly passing in the command
+$ ls
+2023-07-14.tar.gz  file.txt
+
+
+
+5. Arithmetic Expansion
+````````````````````````
+It's used to perform mathematical computation
+
+Syntax: $((expression))
+
+Examples:
+a=$((2**10))
+b=$((10*5/2))
+
+$ x=$((7*9))
+$ echo $x
+63
+
+$ x=$((7**9))
+$ echo $x
+40353607
+
+Precedence is same as any other language
+
+Shell allows arithmetic expressions to be evaluated using let
+$ let y=2**8
+$ echo $y
+256
+
+$ let y=2**128	<- overflow
+$ echo $y
+0
+
+Limitations:
+Overflow, divideByZero, Arithmetic expressions can be done only using integers(cannot handle floats)
+Use 'bc' command to perform float operations (bc: basic calculations) with pipe.. and scale
+$ echo "11/4" | bc
+2
+
+$ echo "scale=2;11/4" | bc	<- scale=2 specifies the precision
+2.75
+
+bc can also be used like this:
+$ bc <<< "scale=3;23/7"
+3.285
+
+<<< allows a string to be used as a standard input for a command
+
+Note that bc also has interactive mode
+$ bc
+6*5
+30
+scale=2
+55/8
+6.87
+
+
+6. Process Substitution
+````````````````````````
+It means to reference the output of a process as a file
+
+Syntax: <(command)
+
+Examples:
+grep -w "root" <(cat /etc/passwd)
+
+
+In Linux, everything is a file, so output of a process can internally be represented as a file too
+
+$ echo <(ls)
+/dev/fd/63
+
+$ cat <(ls)
+exercise3
+file.txt
+
+
+Let's use process substitution to compare two directories using the diff command
+Firstly, create dir1 with a,b inside it
+		dir2 with a,c inside it
+$ diff <(ls dir1) <(ls dir2)
+2c2
+< b
+---
+> c
+
+
+
+7. Word Splitting
+``````````````````
+All the results of previous stages, not occuring in double-quotes are subjected towards word splitting.
+To perform word splitting, bash needs a delimited. For this it uses IFS which by default is space,tab,newline.
+We can change delimiter by changing the IFS variable 
+
+$ echo ${IFS@Q}
+$' \t\n'	<- OUTPUT
+
+
+$ dirs="dir1 dir2 dir3"
+$ mkdir $dirs		<- We didn't wrap $dirs with double quotes, so word splitting will be done
+$ ls
+dir1  dir2  dir3	<- Word splitting was done and three separate directories are created
+
+$ rm -rf dir1 dir2 dir3
+
+$ mkdir "$dirs"
+$ ls
+'dir1 dir2 dir3'	<- It is a single directory named 'dir1 dir2 dir3'
+
+
+Now, let's change IFS and try
+$ dirs="dir 1:dir 2: dir 3"
+$ IFS=":"			<- delimiter is ':'  so the words will be splitted at ':'
+$ mkdir $dir
+$ ls
+'dir 1'  'dir 2'  'dir 3'
+
+
+
+8. Filename Expansion(Globbing)
+````````````````````````````````
+There are 3 characters that perform Globbing:
+   *   => matches any string, including emptiness
+   ?   => matches any single character
+   []  => matches a single character from within a range
+
+Unquotted globbing characters are considered patterns and replaced with a list of filenames matching the pattern.
