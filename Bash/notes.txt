@@ -1129,4 +1129,4 @@ $ rm f[ab][1-3].txt
 (When using potentially dangerous commands like rm like this, it's always better to first echo which files will be affected)
 
 
-DONE TILL LESSON27
+TESTING CONNECTION BETWEEN REMOTE AND LOCAL REPOS
