@@ -708,6 +708,9 @@ Different kinds of expansions and order in which they are performed.
 8. Filename expansion(Globbing)
 
 
+
++++++++3. SHELL EXPANSIONS+++++++
+
 1. Brace Expansion:
 ````````````````````
 It is a mechanism by which arbitrary strings may be generated.
@@ -1129,4 +1132,1066 @@ $ rm f[ab][1-3].txt
 (When using potentially dangerous commands like rm like this, it's always better to first echo which files will be affected)
 
 
-TESTING CONNECTION BETWEEN REMOTE AND LOCAL REPOS
+
+++++++1. TOKENIZATION++++++
+Bash uses metacharacters to break the command line into tokens(words and operators)
+
+Metacharacters:  space,  tab,  newline,  |   ;   &   ()   <>
+
+Token types:
+1. Words(don't contain any unquoted metacharacters)
+2. Operators(contain at least one unquoted metacharacter)
+
+
+Opertaor types: (Operators only matter if they are unquoted)
+1. Control(performs a control function):       newline    |    ||   &    &&    ;    ;;    ;&    ;;&    |&    ()
+2. Redirection(redirect data stream like ip/op to file):  >    >>    >|    <>    >&    &>    <   <<    <<<    <&    <<-
+
+
+Alias expansion is done at this step too
+
+
+
+Consider the following command:
+$ ls $HOME > home.txt	(list files/dirs from $HOME and add the output to home.txt)
+
+First, tokenization happens which will tokenize the command into words and operators
+words: ls, $HOME, home.txt
+operators:  >  and the newline character at end of command
+(note: $ is not a metacharacter)
+
+
+
+++++++++COMMAND IDENTIFICATION++++++++++++
+After tokenization, the shell will parse and identify the tokens into simple and compund commands.
+1.Simple command: A sequence of words separated by blanks and terminated by either a new line or one of the shell's control operaors.
+$ touch   a.txt   b.txt   c.txt   ls
+
+Here, we might expect to create 3 files a.txt,b.txt,c.txt and then list files. But, the ouput is:
+$ ls
+a.txt   b.txt    c.txt   ls
+
+A file names 'ls' was created.. ie shell didn't recognize ls as command, rather argument to touch
+
+We can write two commands in one by separating them with a control operator. Like this:
+$ touch a.txt b.txt c.txt; ls	(Notice the ';' before ls)
+a.txt  b.txt  c.txt
+
+
+
+2.Compound command: A command that starts and ends with a bash reserved word
+(Reserved words are words that have special meaning to the shell. It includes words like if,then,elif,else,fi,etc)
+
+You can check if a word is shell keyword by the following command:
+Syntax:   $ type keyword
+
+Example:
+$ type if
+if is a shell keyword		<- OUTPUT
+
+$ type elif
+elif is a shell keyword		<- OUTPUT
+
+
+
+
++++++++++SHELL EXPANSIONS++++++++++++
+We've already seen expansions.
+
+
+
++++++++++QUOTE REMOVAL++++++++++++++++
+All unquoted occurrences of backslashes(\), single quotes('') and double quotes("") that DID NOT result from an expansions are removed.
+
+Ex:
+$ echo $USER
+student
+
+$ echo \$USER
+$USER
+
+$ echo '"Linux"'
+"Linux"
+
+$ dir="C:\Windows\System"
+$ echo $dir
+C:\Windows\System
+
+
+++++++++++++REDIRECTIONS++++++++++++
+Every shell command has three data streams connected to it.
+They are denoted by numbers:
+STDIN(0)  => Standard Input	(<)
+STDOUT(1) => Standard Output	(>, >>)
+STDERR(2) => Standard Error	(2>, 2>>)
+
+
+Standard Input:-
+$ tail < /etc/group
+Here, tail is getting std input from a file instead of keyboard
+
+
+Standard Output:-
+Normally, the output is printed on screen, but if we wish to save the output to a file, we can use stdout (>,>>)
+$ ls > list.txt
+Here, the output of 'ls' command will be saved in list.txt
+
+$ cat list.txt
+a.txt b.txt		<- contents of list.txt
+
+Instead of overwriting, if we wish to append the output to a file, use '>>'
+$ date >> list.txt
+
+$ cat list.txt
+a.txt b.txt
+Sunday 16 July 2023 12:27:27 PM IST
+
+
+Everything is linux is a file, or treated as one. Even terminal
+To see the file which represents terminal, use the command:
+$ tty
+/dev/pts/1	<- OUTPUT
+
+Now, open a new terminal and execute this command
+$ date > /dev/pts/1
+
+We'll see the output of date command in the previous terminal(ie /dev/pts/1)
+(Pretty cool, isn't it?)
+
+
+
+Standard Error:-
+For this, let's consider a command which will return an error
+$ tail /etc/shadow   (An unpriviledged user cannot access this file)
+tail: cannot open '/etc/shadow' for reading: Permission denied
+
+$ tail /etc/shadow 2> error.txt		(Note: space between 2 and > is not allowed)
+$ cat error.txt
+tail: cannot open '/etc/shadow' for reading: Permission denied
+
+
+2> will create file if doesn't already exist, otherwise it'll overwrite the file.
+To append to an existing file, use 2>>
+
+$ tail /etc/shadow 2>> error.txt
+$ cat error.txt
+tail: cannot open '/etc/shadow' for reading: Permission denied
+tail: cannot open '/etc/shadow' for reading: Permission denied
+
+It is possible to redirect both output and error if a command results in both
+$ tail -n 2 /etc/passwd /etc/shadow > output.txt 2> errors.txt
+
+
+To redirect both outputs and errors to same file:
+$ tail -n 2 /etc/passwd /etc/shadow > output_errors.txt 2>&1  (&1 represents the stream, without & it would've redirected it to file called 1)
+
+
+Till now, we see that if we redirect output to a file, it won't display on screen
+To get output in screen as well as redirect it to a file, use 'tee'
+
+
+Command to get mac address:
+$ ifconfig | grep ether
+ether b8:ac:6f:dc:7a:4f  txqueuelen 1000  (Ethernet)
+
+If we want to both, display on screen and also save in file:
+$ ifconfig | grep ether | tee mac.txt
+ether b8:ac:6f:dc:7a:4f  txqueuelen 1000  (Ethernet)
+
+$ cat mac.txt
+ether b8:ac:6f:dc:7a:4f  txqueuelen 1000  (Ethernet)
+
+
+tee overwrites a file... To append, use -a
+$ who | tee -a mac.txt
+sohail   tty2         2023-07-16 09:15 (tty2)
+
+$ cat mac.txt
+        ether b8:ac:6f:dc:7a:4f  txqueuelen 1000  (Ethernet)
+sohail   tty2         2023-07-16 09:15 (tty2)
+
+
+
+
++++++++++COMMAND EXECUTION++++++++++++
+After all the previous steps, the command will be executed.
+
+
+
+Brief overview of Command Line Processing with an example:
+Consider the following command
+$ ls $HOME > $(date +%H_%M).txt
+
+
+Step-1: Tokenization
+`````````````````````
+The command will be tokenized into words and operators
+
+words: (total 3)
+1. ls
+2. $HOME
+3. $(date +%H_%M).txt     (Note: space inside $(date +%H_%M) is not considered because it is quoted)
+
+(Note: $ is not a metacharacter... therefore $HOME and $(date +%H_%M) are considered words
+
+operators:
+1. space
+2. >
+3. newline
+
+
+
+Step-2: Command Identification
+```````````````````````````````
+Here, the command is identified as simple or compound.
+In our case, the command didn't start/end with reserved word, so it is a simple command.
+The entire command is is terminated by a single newline at the end, so it is a single simple command
+(Note: > sign is not control operator, rather redirection operator)
+
+
+Step-3: Shell Expansion
+````````````````````````
+In our example, there are two types of expansions
+$HOME : variable expansion
+$(date +%H_%M).txt : Command substitution
+
+So, after shell expansion, our command will be:
+$ echo $HOME
+/home/sohail
+
+$ echo $(date +%H_%M)
+13_12				<- OUTPUT  (13 represents Hours, 12 represents Minutes)
+
+
+Therefore, resultant command will be:
+$ ls /home/sohail > 13_12.txt
+
+
+Note: Word splitting is not done because /home/sohail and 13_12 do not have spaces(default IFS)
+Note: Globbing is not done because there is not unquoted (aestrisk)* (question-mark)? or (square-brackets)[]
+
+
+
+Step-4 Quote Removal
+````````````````````
+In our example, there are no unquoted backslashes(\) or single-quotes('') or double-quotes("")
+So, we move to next step.
+
+
+
+Step-5 Redirection
+```````````````````
+We have one redirection operator in our example (>)
+So shell knows that it has to redirect output of 'ls /home/sohail' (left side of >) to '13_12.txt' (right side of >)
+
+
+
+Step-6 Command Execution
+`````````````````````````
+After completing all the prior steps, the command is executed.
+
+
+
+
+LESSON: PROGRAM FLOW CONTROL
+*****************************
+In this lesson:
+  -> Conditional Statements
+  -> Logical Operators
+  -> Nested Blocks
+  -> Arithmetic Comparisons
+  -> String Comparisons
+  -> Case Statements
+
+
+
+If, Elif and Else Statements:
+``````````````````````````````
+Syntax:- (Note: It is a compound statement, as it starts and ends with reserved keyword)
+
+if [ some_condition_is_true ]
+then
+    #1.execute_this_code
+elif [ some_other_condition_is_true ]
+then
+    #2.execute_this_code
+else
+    #3.execute_this_code
+fi
+
+
+Note: The space before and after if,elif are necessary
+
+
+Let's write a script.
+We will run the script with an argument(filename).. script should check if the file exists and is a regular file(ie not a directory) and print the contents of it
+
+
+================if1.sh===================
+#!/bin/bash
+if [ -f "$1" ]
+then
+    echo "The argument ($1) is a file, displaying its contents..."
+    sleep 1
+    cat $1
+elif [ -d "$1" ]
+then
+    echo "The argument ($1) is a directory."
+else
+    echo "The argument ($1) is neither a file nor a directory."
+fi
+=============END SCRIPT==================
+
+Note: Use '$ man test' to check all the tests you can use to check condition
+
+$ chmod +x if1.sh
+$ ./if1.sh exercise3  	<- exercise3 is a folder
+The argument (exercise3) is a directory
+
+$ ./if1.sh helloworld.sh
+The argument (helloworld.sh) is a file, displaying its contents...
+#!/bin/bash
+print("Hello World")
+
+We got the contents of helloworld.sh as output.
+
+
+$ ./if1.sh some_random_nonexisting_name
+The argument (some_random_nonexisting_name) is neither a file nor a directory.
+
+
+Normally we would've got an error if we perform cat on directory or non-existing file
+
+
+
+In our script, we used double-quotes with the argument ie "$1"... This is to prevent word splitting.
+But there's another way to do this, using double square-brackets instead of one
+if [ -f "$1" ]    ==>   if [[ -f $1 ]]
+The double square-brackets also have the feature of regular expression matching.
+
+
+
+Integer Comparison
+```````````````````
+Use '$ man test' to get a complete list of allowed conditional testing.
+It includes the following for integers:-
+INTEGER1 -ge INTEGER2
+     Return true if INTEGER1 is greater than or equal to INTEGER2
+Similarly,
+-gt  : for greater than
+-eq  : for equal to
+-ne  : not equal to
+-lt  : for less than
+-le  : for less than or equal to
+
+
+Exercise: Write a script that'll read input from user and print following for respective input:
+input<18  : "You are minor!"
+input==18 : "Congratulations! You've just become major"
+input>18  : "You are major!"
+
+================checkAge.sh==================
+#!/bin/bash
+read -p "Enter your age: " age
+if [[ $age -lt 18 ]]
+then
+	echo "You are minor!"
+elif [[ $age -eq 18 ]]
+then
+	echo "Congratulations! You've just become major"
+else
+	echo "You are major!"
+fi
+===============END SCRIPT===================
+
+$ chmod +x checkAge.sh
+
+$ ./checkAge.sh
+Enter your age: 18
+Congratulations! You've just become major
+
+$ ./checkAge.sh
+Enter your age: 12
+You are minor!
+
+$ ./checkAge.sh
+Enter your age: 23
+You are major!
+
+
+
+
+Multiple Conditions and Nested If
+``````````````````````````````````
+In our previous script checkAge.sh if we give negative input, it'll print "You are minor!" but logically, age cannot be negative
+Similarly, age can't be absurdly high like 200..
+We can solve this by using multiple conditions using logical operators
+
+After updating the script:-
+===================checkAge.sh====================
+#!/bin/bash
+read -p "Enter your age: " age
+if [[ $age -lt 18 && $age -ge 0 ]]
+then
+	echo "You are minor!"
+elif [[ $age -eq 18 ]]
+then
+	echo "Congratulations! You've just become major"
+elif [[ $age -gt 18 && $age -lt 100 ]]
+then
+	echo "You are major!"
+else
+	echo "Invalid age!"
+fi
+=================END SCRIPT==========================
+
+$ ./checkAge.sh
+Enter your age: -1
+Invalid age!
+
+$ ./checkAge.sh
+Enter your age: 150
+Invalid age!
+
+
+NOTE:
+Logical Operators:
+1. Logical AND =>   && for [[ test ]]     and      -a for [ test ]
+2. Logical OR  =>   || for [[ test ]]     and      -o for [ test ]
+
+
+
+Let's rewrite the above program, here we'll pass age as argument while executing the script..
+If argument age is not present display "Please provide an argument" otherwise work normally as previous script.
+
+===================checkAge2.sh=========================
+#!/bin/bash
+if [[ $# -gt 0 ]]
+then
+	if [[ $1 -lt 18 && $1 -ge 0 ]]
+	then
+		echo "You are minor!"
+	elif [[ $1 -eq 18 ]]
+	then
+		echo "Congratulations! You've just become major"
+	elif [[ $1 -gt 18 && $1 -lt 100 ]]
+	then
+		echo "You are major!"
+	else
+		echo "Invalid age!"
+	fi
+else
+	echo "Please provide an argument"
+fi
+======================END SCRIPT==========================
+
+$ ./checkAge2.sh
+Please provide an argument
+
+$ ./checkAge2.sh -3
+Invalid age!
+
+$ ./checkAge2.sh 8
+You are a minor!
+
+
+
+String Comparisons
+```````````````````
+Check if strings are NOT equal => !=
+Check if strings are equal  =>    = for []    and    == for [[]]
+String length is non-zero   =>    -n
+String length is zero	    =>	  -z
+
+Exercise: Write a script to check if the two strings provided by user are equal or not. Implement both single-brackets and double-brackets
+=================compare_strings.sh======================
+#!/bin/bash
+read -p "String1: " str1
+read -p "String2: " str2
+
+echo
+echo "Using single-brackets with if:-"
+
+if [ "$str1" = "$str2" ]
+then
+	echo "String1 equals String2"
+else
+	echo "String1 does not equal String2"
+fi
+
+echo "-------------------------"
+echo "Using double-brackets with if:-"
+
+if [[ $str1 == $str2 ]]
+then
+	echo "String1 equals String2"
+else
+	echo "String1 does not equal String2"
+fi
+==================END SCRIPT=============================
+
+
+$ ./compare_strings.sh
+String1: Sohail Akthar
+String2: Sohail Akthar
+
+Using single-brackets with if:-
+String1 equals String2
+-------------------------
+Using double-brackets with if:-
+String1 equals String2
+
+
+$ ./compare_strings.sh
+String1: hey
+String2: hello
+
+Using single-brackets with if:-
+String1 does not equal String2
+-------------------------
+Using double-brackets with if:-
+String1 does not equal String2
+
+
+
+Exercise: Write a script to check if a certain word is substring of a statement.
+==================contains_substring.sh=====================
+#!/bin/bash
+statement="the big brown fox jumped over the lazy dog"
+echo "The statement is: $statement"
+
+if [[ $# -gt 0 ]]
+then
+	if [[ $statement == *$1* ]]
+	then
+		echo "true. $1 is a substring of this statement."
+	else
+		echo "false. $1 is NOT a substring of this statement."
+	fi
+else
+	echo "Please provide an argument"
+fi
+======================END====================================
+
+$ ./contains_substring.sh
+The statement is: the big brown fox jumped over the lazy dog
+Please provide an argument
+
+$ ./contains_substring.sh dog
+The statement is: the big brown fox jumped over the lazy dog
+true. dog is a substring of this statement.
+
+$ ./contains_substring.sh dogg
+The statement is: the big brown fox jumped over the lazy dog
+false. dogg is NOT a substring of this statement.
+
+
+
+Exercise: Write a script to check if a string is zero length or not
+============================string_length.sh===========================
+#!/bin/bash
+read -p "Enter a string: " str
+
+if [[ -z $str ]]
+then
+	echo "String is zero length"
+else
+	echo "String is NOT zero length"
+fi
+
+
+if [[ -n $str ]]
+then
+	echo "String is NOT zero length"
+else
+	echo "String is zero length"
+fi
+=============================END SCRIPT================================
+
+$ ./string_length.sh 
+Enter a string: 
+String is zero length
+String is zero length
+
+$ ./string_length.sh 
+Enter a string: sohail
+String is NOT zero length
+String is NOT zero length
+
+
+
+Exercise: Write a script that takes an ip as argument. Print whether there's connection to that ip or not.
+===================test_connection.sh=====================
+#!/bin/bash
+output=$(ping -c 3 $1)
+
+if [[ $output == *"100% packet loss"* ]]
+then
+	echo "The network connection to $1 is not working"
+else
+	echo "The network connectin to $1 is working"
+fi
+======================END SCRIPT===========================
+
+$ ./test_connection.sh 1.1.1.1
+The network connectin to 1.1.1.1 is working
+
+$ ./test_connection.sh 1.1.2.3
+The network connection to 1.1.2.3 is not working
+
+
+
+LESSON: CASE STATEMENT(SWITCH)
+```````````````````````````````
+The case construct allows us to test strings and numbers and is an elegant way to implement logic in our scripts
+
+Syntax:-
+case "$variable" in			<- start of case
+pattern1)
+	execute_this_code_1
+	;;				<- similar to break
+pattern2)
+	execute_this_code_2
+	;;
+patternN)
+	execute_this_code_N
+	;;
+*)					<- default case
+	execute_this_default_code	<- run if no pattern matches
+	;;
+esac					<- end of case
+
+
+
+A script that takes input from user, and prints appropriate line:
+====================favorite_pet.sh========================
+#!/bin/bash
+read -p "Enter your favorite pet: " pet
+
+case $pet in
+"dog")
+	echo "Your fav pet is dog."
+	;;
+cat | Cat | kitty)
+	echo "You like cats."
+	;;
+fish | "African turtle")
+	echo "Fish or turtles are great!"
+	;;
+*)
+	echo "Your favorite pet is unknown"
+esac
+======================END SCRIPT===========================
+
+$ ./favorite_pet.sh 
+Enter your favorite pet: dog
+Your fav pet is dog.
+
+$ ./favorite_pet.sh 
+Enter your favorite pet: African turtle
+Fish or turtles are great!
+
+$ ./favorite_pet.sh 
+Enter your favorite pet: horse
+Your favorite pet is unknown
+
+
+Exercise: Write a script that takes 2 arguments(signal number and process id). send appropriate signal to the process.
+Note: To see all the signals you can send, use '$ kill -l' command
+=======================signal.sh=========================
+#!/bin/bash
+if [[ $# -ne 2 ]]
+then
+	echo "Please provide two arguments: SignalNumber and ProcessID"
+	exit 1
+fi
+
+case $1 in
+1)
+	echo "Sending SIGHUP signal to PID-$2"
+	kill -SIGHUP $2
+	;;
+2)
+	echo "Sending SIGINT signal to PID-$2"
+	kill -SIGINT $2
+	;;
+15)
+	echo "Sending SIGTERM signal to PID-$2"
+	kill -SIGTERM $2
+	;;
+*)
+	echo "Cannot send this signal"
+esac
+======================END SCRIPT=========================
+
+
+Open a new terminal(T2) and type the following command to make it 'run in background'
+$ sleep 100 &
+[1] 15738		<- Here, 15738 is PID
+
+In Terminal(T1):
+$ ./signal.sh 1 15738
+Sending SIGHUP signal to PID-15738
+
+In Terminal(T2):
+[1]   Hangup                  sleep 100
+
+
+Similarly, for other signals(2,15):
+[3]   Interrupt               sleep 100
+
+[5]   Terminated              sleep 100
+
+
+
+LESSON: BASH MENUS (SELECT)
+```````````````````````````
+The 'select' statement provides us with a dropdown menu to select from
+
+Syntax:-
+PS3="Select an option: "		<- PS3 is a prompt. By default it is set to '#?'
+
+select ITEM in LIST_OF_OPTIONS
+do
+	COMMANDS
+done
+
+
+Here, ITEM is a user defined variable and LIST_OF_OPTIONS is a series of strings/numbers  
+
+The select statement keeps executing until it reaches a break or user presses ctrl+c
+
+A sample script using 'select':-
+======================select.sh=======================
+#!/bin/bash
+PS3="Enter your choice: "
+
+select COUNTRY in India Pakistan Bangladesh "United States"
+do
+	echo "Your country is $COUNTRY"
+	echo "REPLY is $REPLY"
+done
+====================END SCRIPT========================
+
+$ ./select.sh 
+1) India
+2) Pakistan
+3) Bangladesh
+4) United States
+Enter your choice: 1
+Your country is India
+REPLY is 1
+Enter your choice: ^C
+
+
+Normally, select statement is used along with if/else or case.
+=======================menu.sh=============================
+#!/bin/bash
+PS3="Enter your choice: "
+
+select COUNTRY in India Bangladesh Pakistan "United States" Quit
+do
+	case $REPLY in
+	1)
+		echo "You probably speak Hindi"
+		;;
+	2)
+		echo "You speak Bangla"
+		;;
+	3)
+		echo "You speak Urdu"
+		;;
+	4)
+		echo "You speak American English"
+		;;
+	5)
+		echo "Qutting..."
+		sleep 1
+		exit
+		;;
+	*)
+		echo "Invalid choice"
+		;;
+	esac
+done
+======================END SCRIPT==============================
+
+$ ./menu.sh 
+1) India
+2) Bangladesh
+3) Pakistan
+4) United States
+5) Quit
+Enter your choice: 1
+You probably speak Hindi
+Enter your choice: 2
+You speak Bangla
+Enter your choice: 3
+You speak Urdu
+Enter your choice: 4
+You speak American English
+Enter your choice: 5
+Qutting...
+
+
+
+Exercise: Create a script with menu to perform following sysadmin tasks:
+add user, remove user, list all processes, kill a process, install an app, remove an app, quit
+
+========================system_administration.sh===========================
+#!/bin/bash
+PS3="Enter your choice: "
+IFS=':'
+OPTIONS="Add user":"Remove user":"List all processes":"Kill process":"Install program":"Remove program":"Quit"
+
+select OPTION in $OPTIONS
+do
+	case $REPLY in
+	1)
+		read -p "Enter username: " username
+		output="$(grep -w $username /etc/passwd)"
+		if [[ -n $output ]]
+		then
+			echo "Username already exists!"
+		else
+			echo "Adding user..."
+			sudo useradd $username
+			if [[ $? -ne 0 ]]
+			then
+				echo "Adding user failed."
+			else
+				echo "User added successfully."
+			fi
+		fi
+		;;
+	2)
+		read -p "Enter username: " username
+		output="$(grep -w $username /etc/passwd)"
+		if [[ -n $output ]]
+		then
+			echo "Removing user..."
+			sudo userdel $username
+			if [[ $? -ne 0 ]]
+			then
+				echo "Remove user failed."
+			else
+				echo "Removed user successfully."
+			fi
+		else
+			echo "User doesn't exist."
+		fi
+		;;
+	3)
+		ps -aux
+		;;
+	4)
+		read -p "Enter process id: " pid
+		if [[ -n $pid ]]
+		then
+			echo "Killing the process with pid-$pid"
+			kill -9 $pid
+			if [[ $? -ne 0 ]]
+			then
+				echo "Killing process unsuccessful."
+			else
+				echo "Killed process successfully."
+			fi
+		else
+			echo "Please enter a valid PID"
+		fi
+		;;
+	5)
+		read -p "Enter app name: " appname
+		if [[ -n $appname ]]
+		then
+			echo "Installing app...."
+			sudo apt install $appname
+			if [[ $? -ne 0 ]]
+			then
+				echo "Install failed."
+			else
+				echo "Installed successfully."
+			fi
+		else
+			echo "Please enter a valid app name"
+		fi
+		;;
+	6)
+		read -p "Enter app name to remove: " appname
+		output="$(apt list 2> /dev/null | grep $appname)"
+		if [[ -n output ]]
+		then
+			echo "Removing app..."
+			sudo apt remove $appname
+			if [[ $? -ne 0 ]]
+			then
+				echo "Remove failed."
+			else
+				echo "Successfully removed."
+			fi
+		else
+			echo "App not found"
+		fi
+		;;
+	7)
+		echo "Qutting..."
+		sleep 1
+		exit
+		;;
+	*)
+		echo "Invalid input"
+		;;
+	esac
+done
+=============================END SCRIPT=================================
+
+
+$ ./system_administration.sh 
+1) Add user	       3) List all processes  5) Install program     7) Quit
+2) Remove user	       4) Kill process	      6) Remove program
+Enter your choice: 1
+Enter username: akthar
+Adding user...
+[sudo] password for sohail: 
+User added successfully.
+
+Enter your choice: 2
+Enter username: akthar
+Removing user...
+Removed user successfully.
+
+Enter your choice: 4
+Enter process id: 24419
+Killing the process with pid-24419
+Killed process successfully.
+
+Enter your choice: 7
+Qutting...
+
+
+
+
+LESSON: CHAINING COMMANDS
+**************************
+List operators:   ;   &    &&    ||
+
+Till now, we were executing commands sequentially but using list operators it is possible to execute multiple commands
+List is a sequence of one or more commands written on same line and separated by one of the list operators
+
+
+1.Semi-colon(;)
+```````````````
+Using semicolon we can write multiple commands in single line.
+Execution will be done sequentially. Shell waits for each command to execute and terminate.
+Return status is the exit status of last command executed.
+Note that there is no particular connection between the commands
+This method is useful when you don't want to wait for the previous command to terminate.
+
+Syntax:  command1; command2; command3
+
+Example:
+$ date; tail -n 1 menu.sh; echo [p..z]
+Sunday 16 July 2023 10:06:55 PM IST
+done
+[p..z]
+
+
+
+2.Ampersand(&)
+``````````````
+If a command ends with a '&', shell executes it asynchronously in a subshell aka execute in the background.
+These are hence referred to as asynchronous commands.
+
+Syntax:    command1& command2
+
+Example:
+$ sleep 10& date
+[1] 25206
+Sunday 16 July 2023 10:10:36 PM IST
+
+Here, the date command didn't wait for sleep to terminate but was executed right away.
+
+
+
+3.Double Ampersand(&&)
+``````````````````````
+Syntax:   command1 && command2
+
+Here, && is logical and
+Hence, command2 will execute if and only if previous command(1) return exit status 0(ie successful execution)
+
+Example:
+$ date && echo success
+Sunday 16 July 2023 10:14:19 PM IST
+success
+
+
+$ ls /root && echo success
+ls: cannot open directory '/root': Permission denied
+
+Here, as the first command resulted in error, the second command didn't execute
+
+
+
+4.Double Pipe(||)
+``````````````````
+Syntax:    command1 || command2
+
+This is kinda opposite of &&
+command2 will execute if and only if previous command(1) return a non-zero exit status(ie unsuccessful execution)
+
+Example:
+$ date || echo failure
+Sunday 16 July 2023 10:19:00 PM IST
+
+$ ls /root || echo failure
+ls: cannot open directory '/root': Permission denied
+failure
+
+
+This is useful to process a possible error
+
+
+&& and || can be used in combination like this:
+command1 && command2 || command3
+If command1 is success, execute command2 otherwise execute command3
+This is like ternary operator
+
+
+
+LESSON: DENIAL OF SERVICE ATTACK (FORK BOMB/RABBIT VIRUS/WABBIT) 
+````````````````````````````````````````````````````````````````
+It is a denial-of-service attack wherein a process continually replicates itself to deplete available system resources, slowing down or crashing the system due to resource starvation.
+
+It can be executed by unpriviledged user and bring down the entire linux system.
+Works on many linux distributions.
+
+Test it on virtual machine and be prepared for a crash/forced reboot
+
+================bomb.sh================
+$0 && $0 &
+==============END SCRIPT===============
+
+Executing this script will cause resource starvation and crash the system.
+Only way to recover is to force reboot.
+
+
+Explanation of script:
+$0 represents the script itself
+So, the script is calling itself recursively two times and going in background and same goes on with called scripts
+
+
+How to prevent such bombs?
+Edit the limits.conf file:
+$ sudo nano /etc/security/limits.conf
+
+At the end of file, append the following line:
+user_name	hard	nproc	2000
+
+This will limit the user processes to 2000. Do not set it too low or you'll limit the user from using the system.
+
+For a group, following line:
+@group_name	hard	nproc	4000
+
+
+DONE TILL LESSON46
