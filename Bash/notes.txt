@@ -2194,4 +2194,226 @@ For a group, following line:
 @group_name	hard	nproc	4000
 
 
-DONE TILL LESSON46
+
+
+
+LESSON: LOOPS
+`````````````
+A loop is a block of code that iterates a list of commands as long as the loop control condition is true.
+
+
+For Loops:-
+''''''''''''
+Syntax:
+for ITEM in LIST_OF_VALUES
+do
+	#Run_these_commands
+done
+
+
+Sample program to get familiar with for loop:
+================================================
+#!/bin/bash
+for os in Ubuntu Kali Pop
+do
+	echo "os is $os"
+done
+================================================
+
+os is Ubuntu
+os is Kali
+os is Pop
+
+
+Here's a simple program to print the multiplication table of a user provided number n
+=====================for_loop.sh=======================
+#!/bin/bash
+read -p "Enter n: " num
+for i in {1..10}
+do
+	echo $num x $i = $(echo $num*$i | bc)
+done
+echo
+====================END SCRIPT=========================
+
+$ ./for_loop.sh 
+Enter n: 10
+10 x 1 = 10
+10 x 2 = 20
+10 x 3 = 30
+10 x 4 = 40
+10 x 5 = 50
+10 x 6 = 60
+10 x 7 = 70
+10 x 8 = 80
+10 x 9 = 90
+10 x 10 = 100
+
+
+For loop in bash is similar to the one in python but differs from the one in java/c++
+
+
+
+Exercise: Create a script to display contents of all files in current directory
+====================display_file_contents.sh==================
+#!/bin/bash
+for item in ./*	
+do
+	if [[ -f $item ]]	#Check if regular file
+	then
+		echo "Displaying contents of $item"
+		sleep 1
+		cat $item
+		echo "#################################"
+	fi
+done
+=====================END SCRIPT================================
+
+
+
+Bash also has a Java/C styled for loop:-
+===================cat java_styled_for_loop.sh ====================
+#!/bin/bash
+for (( i=0; i<=5; i++ ))
+do
+	echo "i=$i"
+done
+========================END SCRIPT==============================
+
+$ ./java_styled_for_loop.sh 
+i=0
+i=1
+i=2
+i=3
+i=4
+i=5
+
+
+
+Exercise: A txt file contains list of malicious ip address. Write a script to block packets from the listed ip addresses
+$ cat malicious_ips.txt 
+1.1.1.1
+8.8.4.4
+
+
+==================block_ips.sh =====================
+#!/bin/bash
+for ip in $(cat malicious_ips.txt)
+do
+	echo "Dropping packets from $ip"
+	iptables -I INPUT -s $ip -j DROP
+done
+===================END SCRIPT=======================
+
+$ sudo ./block_ips.sh 
+[sudo] password for sohail:
+Dropping packets from 1.1.1.1
+Dropping packets from 8.8.4.4
+
+
+
+While loops:-
+'''''''''''''
+The while loop is used to execute a series of commands as long as a specific condition is true.
+
+Syntax:
+while CONDITION
+do
+	#RUN_THESE_COMMANDS
+done
+
+
+Use While loop when number of interations is unknown.
+
+
+A simple program using while loop:-
+==============while_loop.sh =================
+#!/bin/bash
+i=0
+while [[ $i -le 5 ]]
+do
+	echo "i is $i"
+	(( i++ ))
+done
+==============END SCRIPT=====================
+
+$ ./while_loop.sh 
+i is 0
+i is 1
+i is 2
+i is 3
+i is 4
+i is 5
+
+
+
+An infinite while loop:-
+================infinite_while_loop.sh================
+#!/bin/bash
+while :
+do
+	echo "Infinite loop. Press Ctrl+C"
+done
+==================END SCRIPT==========================
+
+
+Notice the colon(:) after 'while' keyword. It is a bash built-in that always returns true.
+We can also use the 'true' keyword like this ->  while true
+We can also use any command in place of CONDITION. commands return exit status(0 for success/true and non-zero for failure/false)
+
+
+
+While loop with input redirection:
+===================while_read.sh====================
+#!/bin/bash
+
+while read line
+do
+	echo $line
+done< /etc/passwd
+====================END SCRIPT======================
+
+Here, we're redirecting the contents of /etc/passwd to the while loop compound statement
+
+
+While loop with process substitution:
+Firstly, to get process as file:
+$ <(ls)
+bash: /dev/fd/63: Permission denied
+
+=========while_read_process_substitution.sh =========
+#!/bin/bash
+
+while read line
+do
+	echo $line
+done< <(ls)
+===================END SCRIPT=========================
+
+
+
+Exercise: Write the block_ips.sh script but using while loop instead of for
+==================block_ips_using_while.sh=================
+#!/bin/bash
+while read line
+do
+	echo "Dropping packets from $line"
+	iptables -I INPUT -s $line -j DROP
+done< ./malicious_ips.txt
+=====================END SCRIPT=============================
+
+$ sudo ./block_ips_using_while.sh 
+Dropping packets from 1.1.1.1
+Dropping packets from 8.8.4.4
+
+
+
+LESSON: BREAK AND CONTINUE
+``````````````````````````
+The break and continue statements allow you to control the loop execution.
+
+With break you can exit from a for,while,until,or select loop
+The continue statement skips the remaining commands inside the loop for the current iteration and passes program control to the next iteration of the loop
+
+
+DONE TILL LESSON 52
