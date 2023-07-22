@@ -1,0 +1,1 @@
+Slides to learn Bash - https://www.emertxe.com/embedded-systems/linux-systems/ls-course-materials/
