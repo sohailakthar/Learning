@@ -1,0 +1,148 @@
+/* --------------------------------- */
+/*  BASIC SETUP   */
+/* --------------------------------- */
+
+:root {
+    --primary-color: #e67e22;
+    --secondary-color: #bd6111;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: #fff;
+    color: #555;
+    font-family: 'Lato', 'Helvetica', 'Arial', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    text-rendering: optimizeLegibility;
+}
+
+
+
+
+/* --------------------------------- */
+/*  REUSABLE COMPONENTS   */
+/* --------------------------------- */
+
+h1 {
+    color: #fff;
+    font-size: 280%;
+    font-weight: 300;
+    letter-spacing: 1px;
+    word-spacing: 3px;
+    text-rendering: optimizeLegibility;
+    text-transform: uppercase;
+    margin: 0 0 20px 0;
+}
+
+.row {
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+
+
+
+/* --------------------------------- */
+/*  HEADER   */
+/* --------------------------------- */
+
+header {
+    height: 100vh;
+    background-image: linear-gradient(#000000a7, #000000a7), url(/resources/css/images/hero.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-text-box {
+    position: absolute;
+    width: 1140px;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+}
+
+.logo {
+    height: 100px;
+    width: auto;
+    margin-top: 20px;
+    float: left;
+}
+
+
+/* ------- MAIN NAVIGATION ------- */
+.main-nav {
+    float: right;
+    margin-top: 55px;
+    list-style: none;
+}
+
+.main-nav li {
+    color: #fff;
+    display: inline-block;
+    margin-left: 40px;
+    text-transform: uppercase;
+}
+
+.main-nav li a:link,
+.main-nav li a:visited {
+    font-size: 90%;
+    color: #fff;
+    padding: 10px 0;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom 0.2s;
+}
+
+.main-nav li a:hover,
+.main-nav li a:active {
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* ----- BUTTONS ------- */
+
+.btn:link,
+.btn:visited {
+    display: inline-block;
+    font-weight: 300;
+    border: 1px solid var(--primary-color);
+    margin-right: 20px;
+    padding: 10px 30px;
+    text-decoration: none;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+}
+
+.btn:hover,
+.btn:active {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-full:link,
+.btn-full:visited {
+    color: #fff;
+    background-color: var(--primary-color);
+}
+
+.btn-full:hover,
+.btn-full:active {
+    background-color: var(--secondary-color);
+}
+
+.btn-ghost:link,
+.btn-ghost:visited {
+    color: var(--primary-color);
+}
+
+.btn-ghost:hover,
+.btn-ghost:active {
+    color: #fff;
+}
+
+
