@@ -1,0 +1,162 @@
+html {
+    scroll-behavior: smooth;
+    min-width: 650px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-weight: 400;
+}
+
+body, html {
+    background-color: #eee2dc;
+    height: 100%;
+}
+
+.container {
+    margin: 0 6% 0 6%;
+    background-color: #f1dbd1;
+}
+
+h1 {
+    font-weight: 700;
+    padding-top: 1em;
+    color: #123c69;
+}
+
+h2 {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #123c69;
+}
+
+table {
+    line-height: 200%;
+}
+
+th {
+    vertical-align: top;
+    text-align: left;
+    font-weight: 500;
+}
+
+p {
+    line-height: 180%;
+    margin: 0.4em 0 0.4em 0;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+img {
+    height: 50vh;
+    width: auto;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+hr {
+    margin: 2em 0 1em 0;
+    height: 1px;
+}
+
+.image {
+    height: 100%;
+    align-items: center;
+    text-align: center;
+}
+
+.link-element {
+    display: inline;
+    margin-right: 4%;
+}
+
+#flag {
+    height: min(8vh, 8vw);
+    width: min(8vh, 8vw);
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    border-radius: 50%;
+    object-fit: cover;
+    position: fixed;
+    cursor: pointer;
+    filter: drop-shadow(0px 0px 8px #000);
+}
+
+.list {
+    margin-top: 1em;
+    padding: 0.5em 0 0.5em 0.5em;
+    display: flex;
+    background-color: #e4c4b5;
+    justify-content: space-between;
+}
+
+.bulletins {
+    display: flex;
+    flex-wrap: wrap;
+    line-height: 180%;
+    list-style-type:disc;
+    margin-left: 1.5em;
+}
+
+.quote {
+    height: 35vh;
+    object-fit: contain;
+}
+
+.quote-wrapper {
+    width: 40vw;
+    align-content: center;
+}
+
+.header {
+    max-height: 10%;
+    align-items: center;
+    text-align: center;
+}
+
+.footer {
+    width: 100%;
+    margin-top: 10vh;
+    height: 20vh;
+    background-color: #e4c4b5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.credits {
+    font-weight: 500;
+}
+
+.main-area {
+    height: 100%;
+    padding: 1em 1em 1em 1em;
+}
+
+.subheading {
+    margin-top: 1em;
+    padding-top: 1em;
+}
+
+.hero {
+    margin-top: 0.8em;
+    display: flex;
+    justify-content: space-around;
+}
+
+.title {
+    margin-top: 0.8em;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.description {
+    padding: 0 2em 0 2em;
+    text-align: justify;
+}
