@@ -23,7 +23,14 @@ html {
 }
 
 
-
+.clearfix {zoom: 1;}
+.clearfix:after {
+    content: '.';
+    clear: both;
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
 
 /* --------------------------------- */
 /*  REUSABLE COMPONENTS   */
@@ -46,6 +53,140 @@ html {
     color: var(--primary-color);
     
 }
+
+
+/* --------------------------------- */
+/*  MEALS   */
+/* --------------------------------- */
+.section-meals {
+    width: 100%;
+    padding: 0;
+    
+}
+
+.meals-showcase {
+    list-style: none;
+}
+
+.meals-showcase li {
+    display: block;
+    float: left;
+    width: 25%;
+}
+
+.meal-photo {
+    width: 100%;
+    margin: 0;
+    background-color: #000;
+    overflow: hidden;
+}
+
+.meal-photo img {
+    width: 100%;
+    height: auto;
+    opacity: 0.6;
+    transform: scale(1.15);
+    transition: transform 0.5s, opacity 0.5s;
+}
+
+.meal-photo img:hover {
+    transform: scale(1.05);
+    opacity: 1;
+}
+
+
+
+/* --------------------------------- */
+/*  HOW IT WORKS   */
+/* --------------------------------- */
+.section-steps {
+    padding: 6%;
+    background-color: #ebebeb;
+}
+
+.steps-box a img {
+    height: 40px;
+    margin-right: 3%;
+}
+
+.app-screen {
+    width: 40%;
+    height: auto;
+}
+
+.steps-box:first-child {
+    text-align: right;
+    padding-right: 3%;
+}
+
+.steps-box:last-child {
+    padding-top: 3%;
+    padding-left: 3%;
+    text-align: left;
+}
+
+.step-number {
+    color: #e67e22;
+    font-size: 150%;
+    height: 54px;
+    width: 54px;
+    border: 2px solid #e67e22;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    margin-right: 25px;
+    float: left;
+    padding: 5px;
+}
+
+.works-step {
+    margin-bottom: 50px;
+}
+
+.works-step:last-of-type {
+    height: 40px;
+    margin-bottom: 80px;
+}
+
+.works-step div {
+    display: inline-block;
+    float: left;
+}
+
+
+
+/* --------------------------------- */
+/*  CITIES   */
+/* --------------------------------- */
+.section-cities {
+    padding: 6%;
+}
+
+.box img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.city-features {
+    margin-bottom: 7px;
+    font-size: 100%;
+}
+
+.city-features i {
+    display: inline-block;
+    width: 30px;
+    text-align: center;
+    color: #e67e22;
+    font-size: 120%;
+    margin-right: 10px;
+    
+    /*secrets to align text and icons*/
+    line-height: 120%;
+    vertical-align: middle;
+    margin-top: -5px;
+}
+
 
 
 /* ----- HEADINGS ------ */
