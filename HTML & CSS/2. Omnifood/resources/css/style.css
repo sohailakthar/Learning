@@ -5,12 +5,17 @@
 :root {
     --primary-color: #e67e22;
     --secondary-color: #bd6111;
+    --background-color: #ebebeb;
 }
 
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+}
+
+*:focus {
+    outline: none;
 }
 
 html {
@@ -52,6 +57,20 @@ html {
     font-size: 350%;
     color: var(--primary-color);
     
+}
+
+.icon-small {
+    display: inline-block;
+    width: 30px;
+    text-align: center;
+    color: #e67e22;
+    font-size: 120%;
+    margin-right: 10px;
+    
+    /*secrets to align text and icons*/
+    line-height: 120%;
+    vertical-align: middle;
+    margin-top: -5px;
 }
 
 
@@ -101,7 +120,7 @@ html {
 /* --------------------------------- */
 .section-steps {
     padding: 6%;
-    background-color: #ebebeb;
+    background-color: var(--background-color);
 }
 
 .steps-box a img {
@@ -173,18 +192,206 @@ html {
     font-size: 100%;
 }
 
-.city-features i {
-    display: inline-block;
-    width: 30px;
-    text-align: center;
-    color: #e67e22;
-    font-size: 120%;
+
+
+/* --------------------------------- */
+/*  TESTIMONIALS   */
+/* --------------------------------- */
+.section-testimonials {
+    padding: 6%;
+    color: #fff;
+    background-image: linear-gradient(#000000d0, #000000d0), url(/resources/css/images/back-customers.jpg);
+    background-attachment: fixed;
+}
+
+blockquote {
+    padding: 3%;
+    margin-top: 40px;
+    font-style: italic;
+    line-height: 145%;
+    position: relative;
+}
+
+blockquote::before {
+    content: "\201C";
+    display: block;
+    font-size: 500%;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+
+}
+
+cite {
+    margin-top: 25px;
+    font-size: 90%;
+    display: block;
+}
+
+cite img {
+    height: 45px;
+    border-radius: 50%;
     margin-right: 10px;
-    
-    /*secrets to align text and icons*/
-    line-height: 120%;
     vertical-align: middle;
-    margin-top: -5px;
+}
+
+
+
+
+/* --------------------------------- */
+/*  PLANS   */
+/* --------------------------------- */
+.section-plans {
+    padding: 6%;
+    background-color: var(--background-color);
+}
+
+.plan-box {
+    width: 90%;
+    margin-left: 5%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 2px #dddddd;
+}
+
+.plan-box div {
+    padding: 20px 15px;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.plan-box div:last-child {
+    text-align: center;
+    border: 0;
+}
+
+.plan-box div ul {
+    list-style: none;
+}
+
+.plan-box div ul li {
+    padding: 5px 0;
+}
+
+.plan-price {
+    font-size: 300%;
+    font-weight: 100;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.plan-price span {
+    font-size: 30%;
+    font-weight: 300;
+}
+
+.plan-price-meal {
+    font-size: 90%;
+}
+
+
+
+
+/* --------------------------------- */
+/*  CONTACT FORM   */
+/* --------------------------------- */
+.section-form {
+    padding: 6%;
+}
+
+.contact-form {
+    width: 60%;
+    margin: 0 20%;
+}
+
+input[type=text],
+input[type=email],
+textarea, select {
+    width: 100%;
+    padding: 7px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+textarea {
+    height: 100px;
+}
+
+input[type=checkbox] {
+    margin: 10px 12px 10px 0;
+}
+
+
+
+
+/* --------------------------------- */
+/*  CONTACT FORM   */
+/* --------------------------------- */
+footer {
+    padding: 3%;
+    font-size: 90%;
+    background-color: #252525;
+}
+
+footer .row:first-child {
+    border-bottom: 1px solid #474747;
+}
+
+.copyright {
+    color: #a8a8a8;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.social-links {
+    list-style: none;
+    float: right;
+}
+
+.footer-nav {
+    float: left;
+    list-style: none;
+}
+
+.social-links li,
+.footer-nav li {
+    margin-right: 20px;
+    display: inline-block;
+}
+
+.social-links li a:link,
+.social-links li a:visited,
+.footer-nav li a:link,
+.footer-nav li a:visited,
+.social-links li a i {
+    text-decoration: none;
+    border: 0;
+    color: #a8a8a8;
+    transition: color 0.2s;
+}
+
+.footer-nav li a:hover,
+.footer-nav li a:active {
+    color: #fff;
+}
+
+.ion-social-facebook:hover,
+.ion-social-facebook:active {
+    color: 	#1877F2;
+}
+
+.ion-social-twitter:hover,
+.ion-social-twitter:active {
+    color: #1D9BF0;
+}
+
+.ion-social-googleplus:hover,
+.ion-social-googleplus:active {
+    color: #db4a39;
+}
+
+.ion-social-instagram:hover,
+.ion-social-instagram:active {
+    color: #d62976;
 }
 
 
@@ -251,6 +458,7 @@ header {
     background-image: linear-gradient(#000000a7, #000000a7), url(/resources/css/images/hero.jpg);
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
 }
 
 .hero-text-box {
@@ -301,7 +509,8 @@ header {
 /* ----- BUTTONS ------- */
 
 .btn:link,
-.btn:visited {
+.btn:visited,
+input[type=submit] {
     display: inline-block;
     font-weight: 300;
     border: 1px solid var(--primary-color);
@@ -313,13 +522,16 @@ header {
 }
 
 .btn:hover,
-.btn:active {
+.btn:active,
+input[type=submit]:hover,
+input[type=submit]:active {
     background-color: var(--secondary-color);
     border-color: var(--secondary-color);
 }
 
 .btn-full:link,
-.btn-full:visited {
+.btn-full:visited,
+input[type=submit] {
     color: #fff;
     background-color: var(--primary-color);
 }
