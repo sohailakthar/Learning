@@ -11,22 +11,27 @@
 * {
     padding: 0;
     margin: 0;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
 }
 
 *:focus {
     outline: none;
 }
 
-html {
+html, body {
     background-color: #fff;
     color: #555;
     font-family: 'Lato', 'Helvetica', 'Arial', sans-serif;
     font-size: 20px;
     font-weight: 300;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
 }
 
+section {
+    padding: 6%;
+}
 
 .clearfix {zoom: 1;}
 .clearfix:after {
@@ -48,9 +53,6 @@ html {
 
 .box {
     padding: 1%;
-}
-.section-features {
-    padding: 6%;
 }
 
 .icon-big {
@@ -80,7 +82,6 @@ html {
 .section-meals {
     width: 100%;
     padding: 0;
-    
 }
 
 .meals-showcase {
@@ -104,12 +105,20 @@ html {
     width: 100%;
     height: auto;
     opacity: 0.6;
-    transform: scale(1.15);
+    -webkit-transform: scale(1.15);
+        -ms-transform: scale(1.15);
+            transform: scale(1.15);
+    -webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
+    transition: opacity 0.5s, -webkit-transform 0.5s;
+    -o-transition: transform 0.5s, opacity 0.5s;
     transition: transform 0.5s, opacity 0.5s;
+    transition: transform 0.5s, opacity 0.5s, -webkit-transform 0.5s;
 }
 
 .meal-photo img:hover {
-    transform: scale(1.05);
+    -webkit-transform: scale(1.05);
+        -ms-transform: scale(1.05);
+            transform: scale(1.05);
     opacity: 1;
 }
 
@@ -119,8 +128,21 @@ html {
 /*  HOW IT WORKS   */
 /* --------------------------------- */
 .section-steps {
-    padding: 6%;
     background-color: var(--background-color);
+}
+
+.works-step {
+    margin-bottom: 50px;
+}
+
+.works-step:last-of-type {
+    height: 40px;
+    margin-bottom: 80px;
+}
+
+.works-step div {
+    display: inline-block;
+    float: left;
 }
 
 .steps-box a img {
@@ -158,33 +180,21 @@ html {
     padding: 5px;
 }
 
-.works-step {
-    margin-bottom: 50px;
-}
 
-.works-step:last-of-type {
-    height: 40px;
-    margin-bottom: 80px;
-}
-
-.works-step div {
-    display: inline-block;
-    float: left;
-}
 
 
 
 /* --------------------------------- */
 /*  CITIES   */
 /* --------------------------------- */
-.section-cities {
-    padding: 6%;
-}
-
 .box img {
     width: 100%;
     height: auto;
     margin-bottom: 15px;
+}
+
+.box p {
+    text-align: justify;
 }
 
 .city-features {
@@ -192,14 +202,30 @@ html {
     font-size: 100%;
 }
 
+.city-features a:link,
+.city-features a:visited {
+    color: #e67e22;
+    text-decoration: none;
+    padding-bottom: 1px;
+    border-bottom: 1px solid #e67e22;
+    -webkit-transition: border-bottom 0.2s, color 0.2s;
+    -o-transition: border-bottom 0.2s, color 0.2s;
+    transition: border-bottom 0.2s, color 0.2s;
+}
 
+.city-features a:hover,
+.city-features a:active {
+    color: #555;
+    border-bottom: 1px solid transparent;
+}
 
 /* --------------------------------- */
 /*  TESTIMONIALS   */
 /* --------------------------------- */
 .section-testimonials {
-    padding: 6%;
     color: #fff;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#000000d0), to(#000000d0)), url(/resources/css/images/back-customers.jpg);
+    background-image: -o-linear-gradient(#000000d0, #000000d0), url(/resources/css/images/back-customers.jpg);
     background-image: linear-gradient(#000000d0, #000000d0), url(/resources/css/images/back-customers.jpg);
     background-attachment: fixed;
 }
@@ -242,7 +268,6 @@ cite img {
 /*  PLANS   */
 /* --------------------------------- */
 .section-plans {
-    padding: 6%;
     background-color: var(--background-color);
 }
 
@@ -251,7 +276,8 @@ cite img {
     margin-left: 5%;
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 2px 2px #dddddd;
+    -webkit-box-shadow: 0 2px 2px #dddddd;
+            box-shadow: 0 2px 2px #dddddd;
 }
 
 .plan-box div {
@@ -294,10 +320,6 @@ cite img {
 /* --------------------------------- */
 /*  CONTACT FORM   */
 /* --------------------------------- */
-.section-form {
-    padding: 6%;
-}
-
 .contact-form {
     width: 60%;
     margin: 0 20%;
@@ -366,6 +388,8 @@ footer .row:first-child {
     text-decoration: none;
     border: 0;
     color: #a8a8a8;
+    -webkit-transition: color 0.2s;
+    -o-transition: color 0.2s;
     transition: color 0.2s;
 }
 
@@ -455,6 +479,8 @@ h3 {
 
 header {
     height: 100vh;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#000000a7), to(#000000a7)), url(/resources/css/images/hero.jpg);
+    background-image: -o-linear-gradient(#000000a7, #000000a7), url(/resources/css/images/hero.jpg);
     background-image: linear-gradient(#000000a7, #000000a7), url(/resources/css/images/hero.jpg);
     background-size: cover;
     background-position: center;
@@ -466,7 +492,9 @@ header {
     width: 1140px;
     top: 50%;
     left:50%;
-    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
 }
 
 .logo {
@@ -498,6 +526,8 @@ header {
     padding: 10px 0;
     text-decoration: none;
     border-bottom: 2px solid transparent;
+    -webkit-transition: border-bottom 0.2s;
+    -o-transition: border-bottom 0.2s;
     transition: border-bottom 0.2s;
 }
 
@@ -505,6 +535,9 @@ header {
 .main-nav li a:active {
     border-bottom: 2px solid var(--primary-color);
 }
+
+
+
 
 /* ----- BUTTONS ------- */
 
@@ -518,6 +551,8 @@ input[type=submit] {
     padding: 10px 30px;
     text-decoration: none;
     border-radius: 200px;
+    -webkit-transition: background-color 0.2s, border 0.2s, color 0.2s;
+    -o-transition: background-color 0.2s, border 0.2s, color 0.2s;
     transition: background-color 0.2s, border 0.2s, color 0.2s;
 }
 
