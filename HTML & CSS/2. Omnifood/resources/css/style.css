@@ -20,6 +20,7 @@
 }
 
 html, body {
+    scroll-behavior: smooth;
     background-color: #fff;
     color: #555;
     font-family: 'Lato', 'Helvetica', 'Arial', sans-serif;
@@ -504,6 +505,14 @@ header {
     float: left;
 }
 
+.logo-black {
+    display: none;
+    height: 50px;
+    width: auto;
+    margin: 5px 0;
+    float: left;
+}
+
 
 /* ------- MAIN NAVIGATION ------- */
 .main-nav {
@@ -525,7 +534,7 @@ header {
     color: #fff;
     padding: 10px 0;
     text-decoration: none;
-    border-bottom: 2px solid transparent;
+    border-bottom: 3px solid transparent;
     -webkit-transition: border-bottom 0.2s;
     -o-transition: border-bottom 0.2s;
     transition: border-bottom 0.2s;
@@ -533,8 +542,33 @@ header {
 
 .main-nav li a:hover,
 .main-nav li a:active {
-    border-bottom: 2px solid var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
 }
+
+
+
+/* -- Sticky Nav -- */
+.sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.829);
+    box-shadow: 0 2px 2px #efefef;
+    z-index: 9999;
+}
+
+.sticky .logo { display: none; }
+.sticky .logo-black { display: block; }
+
+.sticky .main-nav li a:link,
+.sticky .main-nav li a:visited {
+    padding: 19px 0;
+    color: #555;
+}
+
+.sticky .main-nav { margin-top: 18px; }
+
 
 
 

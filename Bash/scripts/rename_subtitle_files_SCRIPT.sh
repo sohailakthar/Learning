@@ -3,7 +3,7 @@ ls *_en.srt | cat > files.txt
 IFS=$'\n'
 while read line
 do
-	$newname="${newname//_en}"
+	newname="${line//_en}"
 	echo
 	echo $line
 	echo $newname
