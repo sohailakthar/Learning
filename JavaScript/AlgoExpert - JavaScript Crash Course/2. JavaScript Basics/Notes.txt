@@ -1,0 +1,22 @@
+JavaScript is Multi-Paradigm Language
+- Event driven: Respond to events
+- Functional: Pure functions, first-class functions(Functions can be treated as values, stored in variables)
+- Object Oriented: Custom objects with inheritance
+- Imperative: Specify Logic & Control Flow
+- Declarative: Specify Desired Output.
+
+JavaScript is Evolving
+- EcmaScript: Standardized version
+
+JavaScript is Interpreted.
+JavaScript Engine executes code in browser.
+
+Primitive Types in JavaScript:
+- Number: 25, 10.42
+- BigInt: BigInt(9900000000000000), 250n (postfix with 'n')
+- Boolean: true, false
+- String: 'hello', "world"
+- Symbol: symbol('description')
+- Null: null
+- Undefined: undefined
+(null must be set, while undefined means the value has not been set at all)
