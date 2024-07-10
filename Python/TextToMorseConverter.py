@@ -9,5 +9,6 @@ for letter in textInput:
     if letter == " ":
         result += " "
         continue;
-    result += morseCode[ord(letter.lower())-97] + " "
+    result += morseCode[ord(letter.lower())-96] + " "
+#It prints the result
 print(result)
