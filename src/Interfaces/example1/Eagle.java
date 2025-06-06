@@ -1,4 +1,4 @@
-package Interfaces;
+package Interfaces.example1;
 
 public class Eagle extends Animal implements Flyable, Jumpable{
 

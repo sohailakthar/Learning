@@ -1,4 +1,4 @@
-package Interfaces;
+package Interfaces.example1;
 
 public class Sparrow extends Animal implements Flyable{
 

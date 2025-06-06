@@ -1,4 +1,4 @@
-package Interfaces;
+package Interfaces.example1;
 
 public class Main {
 	// Abstract class: Common feature and with slightly different implementation (walk, eat, sound)

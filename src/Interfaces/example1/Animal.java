@@ -1,4 +1,4 @@
-package Interfaces;
+package Interfaces.example1;
 
 public abstract class Animal {
 	public void walk() {
