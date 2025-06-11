@@ -1,4 +1,4 @@
-package org.sohail;
+package org.sohail.crudoperations;
 
 import jakarta.persistence.Embeddable;
 
@@ -12,7 +12,7 @@ public class Address {
     }
 
     public void setCity(String city) {
-        city = city;
+        this.city = city;
     }
 
     public String getState() {
@@ -20,7 +20,7 @@ public class Address {
     }
 
     public void setState(String state) {
-        state = state;
+        this.state = state;
     }
 
     @Override

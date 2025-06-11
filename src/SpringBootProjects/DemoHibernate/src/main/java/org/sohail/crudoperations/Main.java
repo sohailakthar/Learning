@@ -1,4 +1,4 @@
-package org.sohail;
+package org.sohail.crudoperations;
 
 import java.util.Scanner;
 

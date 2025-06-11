@@ -1,4 +1,4 @@
-package org.sohail;
+package org.sohail.crudoperations;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,7 +16,7 @@ public class StudentManagementService {
 
     public StudentManagementService() {
         sf = new Configuration()
-                .addAnnotatedClass(org.sohail.Student.class)
+                .addAnnotatedClass(Student.class)
                 .configure()
                 .buildSessionFactory();
 
