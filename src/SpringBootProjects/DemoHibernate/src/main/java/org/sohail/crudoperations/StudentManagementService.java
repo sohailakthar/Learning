@@ -68,12 +68,18 @@ public class StudentManagementService {
         System.out.print("Enter the city name: ");
         String desiredCity = sc.nextLine();
 
-        studentList = session.createQuery("SELECT a FROM Student a WHERE a.address.city = :desiredCity", Student.class)
-                .setParameter("desiredCity", desiredCity)
+        studentList = session.createQuery("FROM Student WHERE address.city = ?1", Student.class)
+                .setParameter(1, desiredCity)
                 .getResultList();
 
-        studentList.stream()
-                .forEach(System.out::println);
+        studentList.forEach(System.out::println);
+    }
+
+    public void displayStudentNames() {
+        List<String> studentNames = session.createQuery("SELECT sName FROM Student", String.class)
+                .getResultList();
+
+        studentNames.forEach(System.out::println);
     }
 
     public void updateStudentName() {

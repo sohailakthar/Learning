@@ -12,9 +12,10 @@ public class Main {
         System.out.println("1. Add a student");
         System.out.println("2. Display all students");
         System.out.println("3. Display students of a specific city");
-        System.out.println("4. Update student name");
-        System.out.println("5. Delete a student by ID");
-        System.out.println("6. Exit");
+        System.out.println("4. Display student names");
+        System.out.println("5. Update student name");
+        System.out.println("6. Delete a student by ID");
+        System.out.println("7. Exit");
         System.out.println("----------------------");
     }
     public static void main(String[] args) {
@@ -43,14 +44,18 @@ public class Main {
                     addLineBreak();
                     break;
                 case 4:
-                    sms.updateStudentName();
+                    sms.displayStudentNames();
                     addLineBreak();
                     break;
                 case 5:
-                    sms.deleteStudentById();
+                    sms.updateStudentName();
                     addLineBreak();
                     break;
                 case 6:
+                    sms.deleteStudentById();
+                    addLineBreak();
+                    break;
+                case 7:
                     sms.closeSession();
                     break menu;
                 default:
