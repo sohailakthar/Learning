@@ -10,6 +10,10 @@
         Prototype scope: Creates only when you call the getBean.. As many *different* objects as you want-->
     <bean id="alien" class="org.sohail.Alien" scope="prototype">
         <property name="age" value="21"></property>
+        <property name="laptop" ref="laptop1"></property>
+    </bean>
+
+    <bean id="laptop1" class="org.sohail.Laptop">
     </bean>
 
 </beans>
