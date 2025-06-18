@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- bean definitions here -->
+
+<!--    Singleton scope: Creates only one object (at Application start, even if you didn't call getBean)
+        Prototype scope: Creates only when you call the getBean.. As many *different* objects as you want-->
+    <bean id="alien" class="org.sohail.Alien" scope="prototype"></bean>
+
+</beans>
