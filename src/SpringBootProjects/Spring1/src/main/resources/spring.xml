@@ -8,6 +8,8 @@
 
 <!--    Singleton scope: Creates only one object (at Application start, even if you didn't call getBean)
         Prototype scope: Creates only when you call the getBean.. As many *different* objects as you want-->
-    <bean id="alien" class="org.sohail.Alien" scope="prototype"></bean>
+    <bean id="alien" class="org.sohail.Alien" scope="prototype">
+        <property name="age" value="21"></property>
+    </bean>
 
 </beans>
