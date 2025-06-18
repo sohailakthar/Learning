@@ -9,8 +9,18 @@
 <!--    Singleton scope: Creates only one object (at Application start, even if you didn't call getBean)
         Prototype scope: Creates only when you call the getBean.. As many *different* objects as you want-->
     <bean id="alien" class="org.sohail.Alien" scope="prototype">
-        <property name="age" value="21"></property>
-        <property name="laptop" ref="laptop1"></property>
+        <property name="age" value="21"/>
+        <property name="laptop" ref="laptop1"/>
+
+<!--        Must be in the same sequence as the constructor args-->
+<!--        <constructor-arg name="age" value="23"/>-->
+<!--        <constructor-arg name="salary" value="25000"/>-->
+<!--        <constructor-arg name="laptop" ref="laptop1"/>-->
+
+<!--        Or you can specify the indexes.. if you don't wanna follow the sequence-->
+            <constructor-arg index="1" value="25000"/>
+            <constructor-arg index="0" value="23"/>
+            <constructor-arg index="2" ref="laptop1"/>
     </bean>
 
     <bean id="laptop1" class="org.sohail.Laptop">
