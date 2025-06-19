@@ -4,25 +4,22 @@ public class Alien {
 
     private int age;
     private int salary;
-    private Laptop laptop;
+    private Computer computer;
 
     public Alien() {
-        System.out.println("Alien object created!");
     }
 
     //Parameterized constructor
 
 
-    public Alien(int age, int salary, Laptop laptop) {
-        System.out.println("Parameterized constructor called.");
+    public Alien(int age, int salary, Laptop computer) {
         this.age = age;
         this.salary = salary;
-        this.laptop = laptop;
+        this.computer = computer;
     }
 
     public void code() {
-        System.out.println("Coding...");
-        laptop.compile();
+        computer.compile();
     }
 
     public int getAge() {
@@ -30,7 +27,6 @@ public class Alien {
     }
 
     public void setAge(int age) {
-        System.out.println("Setter called.");
         this.age = age;
     }
 
@@ -42,11 +38,11 @@ public class Alien {
         this.salary = salary;
     }
 
-    public Laptop getLaptop() {
-        return laptop;
+    public Computer getComputer() {
+        return computer;
     }
 
-    public void setLaptop(Laptop laptop) {
-        this.laptop = laptop;
+    public void setComputer(Computer computer) {
+        this.computer = computer;
     }
 }
